@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.Jayswansocool48.PopUtil</id>
+  <name>PopUtil</name>
+  <summary>See every app on your PC and keep Pop!_OS tidy</summary>
+  <developer id="io.github.jayswansocool48">
+    <name>Jayswansocool48</name>
+  </developer>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>LicenseRef-proprietary</project_license>
+  <description>
+    <p>PopUtil finds everything installed on your PC, wherever it came from: system packages, .deb files,
+    Flatpaks, Snaps, AppImages, folders in /opt, install scripts, developer tools, game engines, Wine apps
+    and games. It shows where each app lives, how it got there and how much space it takes, and removes
+    the ones you don't need without breaking anything.</p>
+    <ul>
+      <li>Removals are simulated first, and anything Pop!_OS needs is protected</li>
+      <li>Removed apps wait in a holding area so you can restore them</li>
+      <li>One-click app installs, tweaks and maintenance</li>
+      <li>Disk cleanup and file organizing, with optional advice from Claude or Ollama</li>
+    </ul>
+    <p>PopUtil manages your whole system, so it runs its engine outside the Flatpak sandbox.</p>
+  </description>
+  <launchable type="desktop-id">io.github.Jayswansocool48.PopUtil.desktop</launchable>
+  <url type="homepage">https://github.com/Jayswansocool48/poputil</url>
+  <url type="bugtracker">https://github.com/Jayswansocool48/poputil/issues</url>
+  <screenshots>
+    <screenshot type="default">
+      <caption>Every app on the PC, grouped by where it lives</caption>
+      <image>https://raw.githubusercontent.com/Jayswansocool48/poputil/main/docs/screenshots/apps.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Where an app lives, how it got there, and a safe way to remove it</caption>
+      <image>https://raw.githubusercontent.com/Jayswansocool48/poputil/main/docs/screenshots/app-details.png</image>
+    </screenshot>
+  </screenshots>
+  <branding>
+    <color type="primary" scheme_preference="light">#d8e2ee</color>
+    <color type="primary" scheme_preference="dark">#1f2d3d</color>
+  </branding>
+  <content_rating type="oars-1.1"/>
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+  </supports>
+  <requires>
+    <display_length compare="ge">900</display_length>
+  </requires>
+  <releases>
+    <release version="2.1.0" date="2026-10-28">
+      <description>
+        <p>PopUtil is now a Flatpak with updates through the COSMIC Store, and has a new look.</p>
+        <ul>
+          <li>Fixed a crash when scanning Steam games you've never played</li>
+          <li>One unreadable place no longer stops the whole scan</li>
+          <li>Cleans up older PopUtil copies on first launch</li>
+          <li>Optional: match your COSMIC accent color</li>
+        </ul>
+      </description>
+    </release>
+    <release version="2.0.0" date="2026-10-28">
+      <description><p>Apps on this PC: find, explain and safely remove apps from anywhere on the system.</p></description>
+    </release>
+  </releases>
+</component>

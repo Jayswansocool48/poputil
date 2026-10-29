@@ -1,0 +1,43 @@
+# Flatpak manifest for PopUtil. Built by .github/workflows/flatpak.yml; build it locally with:
+#   flatpak-builder --user --install --install-deps-from=flathub --force-clean build packaging/flatpak/io.github.Jayswansocool48.PopUtil.yml
+id: io.github.Jayswansocool48.PopUtil
+runtime: org.gnome.Platform
+runtime-version: '50'
+sdk: org.gnome.Sdk
+command: poputil
+finish-args:
+  - --share=ipc
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+  # The window talks to PopUtil's own engine on 127.0.0.1
+  - --share=network
+  # PopUtil manages your system (packages, /opt, services, other Flatpaks), so its engine runs on the host
+  - --talk-name=org.freedesktop.Flatpak
+  # Where the engine is staged for the host, and where Removed items, scans and settings live
+  - --filesystem=xdg-data/poputil:create
+modules:
+  - name: poputil
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 packaging/flatpak/shell.py /app/bin/poputil
+      - mkdir -p /app/share/poputil
+      - cp -r poputil.py popclean.py apps.json VERSION engine ui /app/share/poputil/
+      - find /app/share/poputil -name __pycache__ -prune -exec rm -rf {} +
+      - install -Dm644 packaging/flatpak/${FLATPAK_ID}.desktop /app/share/applications/${FLATPAK_ID}.desktop
+      - install -Dm644 packaging/flatpak/${FLATPAK_ID}.metainfo.xml /app/share/metainfo/${FLATPAK_ID}.metainfo.xml
+      - install -Dm644 ui/icon.svg /app/share/icons/hicolor/scalable/apps/${FLATPAK_ID}.svg
+      - install -Dm644 packaging/flatpak/icon-128.png /app/share/icons/hicolor/128x128/apps/${FLATPAK_ID}.png
+      - install -Dm644 packaging/flatpak/icon-256.png /app/share/icons/hicolor/256x256/apps/${FLATPAK_ID}.png
+    sources:
+      - type: dir
+        path: ../..
+        skip:
+          - .git
+          - .github
+          - build
+          - .flatpak-builder
+          - repo
+          - site
+          - tests
+          - docs

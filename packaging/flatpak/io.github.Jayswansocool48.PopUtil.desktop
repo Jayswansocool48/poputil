@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=PopUtil
+GenericName=System toolkit
+Comment=See every app on this PC, remove what you don't need, and keep Pop!_OS tidy
+Exec=poputil
+Icon=io.github.Jayswansocool48.PopUtil
+Terminal=false
+Categories=System;Settings;PackageManager;
+Keywords=apps;uninstall;install;tweak;update;clean;disk;organize;winutil;
+StartupWMClass=io.github.Jayswansocool48.PopUtil
+SingleMainWindow=true

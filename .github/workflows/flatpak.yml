@@ -1,0 +1,101 @@
+# Builds PopUtil as a Flatpak on every version tag (v2.1.0, v2.2.0, …) and publishes a signed Flatpak
+# repository to GitHub Pages. PCs that added the repository get the update in the COSMIC Store and with
+# `flatpak update`. One-time setup: packaging/setup-github.sh
+name: Flatpak
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  APP_ID: io.github.Jayswansocool48.PopUtil
+  MANIFEST: packaging/flatpak/io.github.Jayswansocool48.PopUtil.yml
+  SITE_URL: https://jayswansocool48.github.io/poputil
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the version matches the tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          if [ "v$(cat VERSION)" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::VERSION says $(cat VERSION) but the tag is $GITHUB_REF_NAME. Update VERSION and the metainfo release first."
+            exit 1
+          fi
+
+      - name: Run the tests that don't need root
+        run: python3 -m unittest tests.test_parsing -v
+
+      - name: Install Flatpak tools
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q flatpak flatpak-builder
+          flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+      - name: Import the signing key
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        run: |
+          if [ -z "$GPG_PRIVATE_KEY" ] || [ -z "${{ secrets.GPG_KEY_ID }}" ]; then
+            echo "::error::Add the GPG_PRIVATE_KEY and GPG_KEY_ID secrets first: run packaging/setup-github.sh"
+            exit 1
+          fi
+          printf '%s\n' "$GPG_PRIVATE_KEY" | gpg --batch --import
+
+      - name: Build and sign
+        run: |
+          flatpak-builder --user --install-deps-from=flathub --force-clean --disable-rofiles-fuse \
+            --repo=repo --default-branch=stable --gpg-sign="${{ secrets.GPG_KEY_ID }}" build "$MANIFEST"
+          flatpak build-update-repo --generate-static-deltas --prune --default-branch=stable \
+            --title="PopUtil" --gpg-sign="${{ secrets.GPG_KEY_ID }}" repo
+
+      - name: Make a single-file download
+        run: |
+          flatpak build-bundle --repo-url="$SITE_URL/repo/" \
+            --runtime-repo=https://dl.flathub.org/repo/flathub.flatpakrepo \
+            --gpg-sign="${{ secrets.GPG_KEY_ID }}" repo PopUtil.flatpak "$APP_ID" stable
+
+      - name: Assemble the update site
+        run: |
+          mkdir -p site
+          cp -r repo site/repo
+          cp packaging/site/index.html ui/icon.svg PopUtil.flatpak site/
+          KEY="$(gpg --export "${{ secrets.GPG_KEY_ID }}" | base64 -w0)"
+          for f in poputil.flatpakrepo poputil.flatpakref; do
+            sed "s|@GPGKEY@|$KEY|; s|@SITE_URL@|$SITE_URL|g" "packaging/site/$f" > "site/$f"
+          done
+          sed -i "s|@VERSION@|$(cat VERSION)|g; s|@SITE_URL@|$SITE_URL|g" site/index.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Attach the download to the GitHub release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: PopUtil.flatpak
+          generate_release_notes: true
+
+  publish:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
