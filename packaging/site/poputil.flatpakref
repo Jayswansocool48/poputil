@@ -1,0 +1,9 @@
+[Flatpak Ref]
+Name=io.github.Jayswansocool48.PopUtil
+Branch=stable
+Title=PopUtil
+Url=@SITE_URL@/repo/
+RuntimeRepo=https://dl.flathub.org/repo/flathub.flatpakrepo
+SuggestRemoteName=poputil
+IsRuntime=false
+GPGKey=@GPGKEY@

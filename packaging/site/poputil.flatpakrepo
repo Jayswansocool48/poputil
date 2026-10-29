@@ -1,0 +1,9 @@
+[Flatpak Repo]
+Title=PopUtil
+Url=@SITE_URL@/repo/
+Homepage=https://github.com/Jayswansocool48/poputil
+Comment=Updates for PopUtil
+Description=PopUtil, a control panel for Pop!_OS that finds every app on your PC
+Icon=@SITE_URL@/icon.svg
+DefaultBranch=stable
+GPGKey=@GPGKEY@

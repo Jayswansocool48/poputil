@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PopUtil</title>
+<link rel="icon" href="icon.svg">
+<style>
+  /* Meridian Blue (21st.dev, serafimcloud) */
+  :root { color-scheme: dark; --bg: #14171c; --card: #1c2027; --fg: #e6e9ef; --muted: #9097a6; --border: #353c48; --primary: #6b8db8; --accent: #1f2d3d; --accent-fg: #a8c2dd; }
+  @media (prefers-color-scheme: light) { :root { color-scheme: light; --bg: #eef0f3; --card: #fbfcfd; --fg: #181b21; --muted: #5a6072; --border: #c9cfd8; --primary: #3b608f; --accent: #d8e2ee; --accent-fg: #1f3a5c; } }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 system-ui, "Inter", sans-serif; }
+  main { max-width: 680px; margin: 0 auto; padding: 64px 24px; }
+  header { display: flex; gap: 16px; align-items: center; margin-bottom: 8px; }
+  header img { width: 56px; height: 56px; }
+  h1 { font-size: 30px; font-weight: 600; margin: 0; }
+  p { color: var(--muted); }
+  h2 { font-size: 17px; font-weight: 600; margin: 36px 0 10px; }
+  pre { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; overflow-x: auto; font: 14px/1.6 ui-monospace, monospace; }
+  a { color: var(--primary); }
+  .btn { display: inline-block; background: var(--primary); color: #0f1216; text-decoration: none; font-weight: 600; padding: 9px 16px; border-radius: 8px; margin-right: 8px; }
+  .btn.quiet { background: var(--accent); color: var(--accent-fg); }
+  ol { padding-left: 22px; } li { margin: 6px 0; }
+</style>
+</head>
+<body>
+<main>
+  <header><img src="icon.svg" alt=""><div><h1>PopUtil</h1><span style="color:var(--muted)">Version @VERSION@</span></div></header>
+  <p>A control panel for Pop!_OS that finds every app on your PC, shows where it lives, and removes what you don't need without breaking anything.</p>
+
+  <h2>Install</h2>
+  <p>Paste this into a terminal. It adds PopUtil's update source, so new versions show up in the COSMIC Store.</p>
+  <pre>flatpak install --user @SITE_URL@/poputil.flatpakref</pre>
+  <p><a class="btn" href="poputil.flatpakref">Download the install file</a><a class="btn quiet" href="PopUtil.flatpak">Download the app file</a></p>
+
+  <h2>Updates</h2>
+  <ol>
+    <li>New versions appear under Updates in the COSMIC Store.</li>
+    <li>Or run <code>flatpak update</code> in a terminal.</li>
+  </ol>
+
+  <h2>Remove</h2>
+  <pre>flatpak uninstall --user io.github.Jayswansocool48.PopUtil</pre>
+  <p>Your settings and anything waiting in Removed stay in <code>~/.local/share/poputil</code>.</p>
+  <p><a href="https://github.com/Jayswansocool48/poputil">Source on GitHub</a></p>
+</main>
+</body>
+</html>
