@@ -4,5 +4,5 @@ __pycache__/
 build/
 .flatpak-builder/
 repo/
-site/
+/site
 *.flatpak
